@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Dice Rolling</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<script>
+/*
+TODO : add a roll
+TODO : update config
+TODO : read url
+TODO : write url
+*/
+</script>
+<style>
+body {
+  color: white;
+  background: #334;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+button {
+  background: #06f;
+  color: white;
+  border: solid 1px #06f;
+  border-radius: 10px;
+}
+
+button:hover {
+  background: white;
+  color: #06f;
+}
+
+.pans {
+  display: none;
+}
+
+.roll-block {
+  width: 180px;
+  display: inline-block;
+  margin: 7px;
+}
+
+.roll-button {
+  background: #06f;
+  color: white;
+  border-radius: 0 0 20px 20px;
+  padding: 3px 0;
+  cursor: pointer;
+  border: solid 1px white;
+  font-variant-caps: small-caps;
+}
+.roll-button:hover {
+  background: white;
+  color: #06f;
+}
+
+.roll-formula {
+  border: solid 1px white;
+  border-top: none;
+  padding: 4px;
+}
+
+.roll-label {
+  background: #06f;
+  font-weight: 600;
+  padding: 5px 0;
+  border: solid 1px white;
+  border-radius: 25px 25px 0 0;
+}
+
+.roll-result {
+  padding: 4px;
+}
+
+#pan-rolls {
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#pansel button {
+  font-size: 1em;
+  padding: 5px 15px;
+}
+
+#pansel button.selected {
+  background: white;
+  color: #06f;
+}
+
+#roll-add {
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  margin: 30px;
+  padding: 10px;
+  text-align: center;
+  font-size: 3em;
+  background: black;
+  color: darkgrey;
+  border-radius: 35px;
+  cursor: pointer;
+}
+#roll-add:hover {
+  color: #06f;
+  background: white;
+}
+
+#veil {
+  background: #0009;
+  display: none;
+  color: white;
+  position: absolute;
+  top: 0;
+  bottom : 0;
+  right: 0;
+  left: 0;
+  text-align: center;
+  padding-top: 50px;
+}
+</style>
+<script type="text/javascript">
+var h = {
+  id: function(id) { return document.getElementById(id); },
+  tag: function(tag, attrs, innerText) {
+    var o = document.createElement(tag);
+    for (attr in attrs) { o.setAttribute(attr, attrs[attr]); }
+    if (innerText != null) { o.innerText = innerText; }
+    return o;
+  }
+};
+
+var store = {};
+
+var app = {};
+
+function Config() {
+  //
+  //
+  //
+}
+
+function PanSel() {
+  this.selected = "";
+  this.rollsbtn = h.id("pansel-rolls");
+  this.configbtn = h.id("pansel-config");
+  this.rollspan = h.id("pan-rolls");
+  this.configpan = h.id("pan-config");
+  var self = this;
+  this.showrolls = function() {
+	if (self.selected == "rolls") return;
+	self.configbtn.classList.remove("selected");
+	self.rollsbtn.classList.add("selected");
+	self.configpan.style.display = "none";
+	self.rollspan.style.display = "flex";
+	self.selected = "rolls";
+  };
+  this.showconfig = function() {
+    if (self.selected == "config") return;
+	self.rollsbtn.classList.remove("selected");
+	self.configbtn.classList.add("selected");
+	self.rollspan.style.display = "none";
+	self.configpan.style.display = "block";
+	self.selected = "config";
+  };
+  this.showrolls();
+}
+PanSel.prototype.init = function() {
+  this.rollsbtn.addEventListener("click", this.showrolls);
+  this.configbtn.addEventListener("click", this.showconfig);
+};
+
+function Rolls() {
+  //this.pan = h.id("pan-rolls");
+  this.addbtn = h.id("roll-add");
+  //
+  var self = this;
+  //
+  //
+  this.addRoll = function() {
+    //
+    // TODO : move through the veil
+    //
+    //
+    self.buildRoll();
+    //
+  }
+  //
+  this.buildRoll = function() {
+    var blk = h.tag("div", {"class": "roll-block"});
+    var lbl = h.tag("div", {"class": "roll-label"}, "text label");
+    var frla = h.tag("div", {"class": "roll-formula"}, "(dice formula)");
+    var res = h.tag("div", {"class": "roll-result"});
+    var btn = h.tag("div", {"class": "roll-button"}, "Roll!");
+    //
+    blk.append(lbl);
+    blk.append(frla);
+    blk.append(res);
+    blk.append(btn);
+    //
+    self.addbtn.before(blk);
+    //
+  };
+  //
+}
+Rolls.prototype.init = function() {
+  //
+  this.addbtn.addEventListener("click", this.addRoll);
+  //
+}
+
+function Veil() {
+  this.status = false;
+  this.div = h.id("veil");
+  this.div.style.display = "none";
+  this.on = function() { status = true; this.div.style.display = "block"; };
+  this.off = function() { status = false; this.div.style.display = "none"; };
+  //
+  //
+};
+
+app.start = function() {
+  this.config = new Config();
+  this.pansel = new PanSel();
+  this.pansel.init();
+  this.rolls = new Rolls();
+  this.rolls.init();
+  this.veil = new Veil();
+};
+</script>
+</head>
+<body onload="app.start();">
+<h1>Dice Rolling</h1>
+<p id="pansel">
+<button id="pansel-rolls">Rolls</button>
+<button id="pansel-config">Config</button>
+</p>
+<div class="pans" id="pan-rolls">
+<div id="roll-add">+</div>
+</div>
+<div class="pans" id="pan-config">
+    (hide conf zone)
+</div>
+<div id="veil">
+bouh
+</div>
+</body>
+</html>

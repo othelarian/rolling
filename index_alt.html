@@ -1,0 +1,60 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Quickroll</title>
+<style>
+.form-block, .res-block {border: solid 1px gray;padding: 3px 10px;}
+.res-block {text-align: center;min-width: 120px;}
+@keyframes newroll { from {background: #3f3;} to {background: none;} }
+.res-rolled {animation: newroll 2s;};
+</style>
+<script type="text/javascript">
+var dice = [
+  {name: "d4", link: "d4"},
+  {name: "d6", link: "d6"},
+  {name: "d8", link: "d8"},
+  {name: "ULTIMATE", link: "d12"}
+];
+function call(e, id) {
+  var r = "";
+  switch(e) {
+    case "d4": r = h.rand(4); break;
+    case "d6": r = h.rand(6); break;
+    case "d8": r = h.rand(8); break;
+    case "d12": r = h.rand(12); break;
+  }
+  var rs = h.id("res-"+id);
+  rs.innerText = r;
+  rs.classList.remove("res-rolled");
+  void rs.offsetWidth;
+  rs.classList.add("res-rolled");
+}
+</script>
+<script type="text/javascript">
+var h = {
+  ctag: function(tag, attrs, innerText) {
+    var o = document.createElement(tag);
+    for (attr in attrs) { o.setAttribute(attr, attrs[attr]); }
+    if (innerText != null) { o.innerText = innerText; }
+    return o;
+  },
+  id: function(id) { return document.getElementById(id); },
+  rand: function(f) { return Math.ceil(Math.random()*f); }
+};
+function init() {
+  var p = h.id("the-table");
+  for (i in dice) {
+    var die = dice[i];
+    var line = h.ctag("tr");
+    var cf = h.ctag("td", {"class": "form-block"}, die.name);
+    var cr = h.ctag("td", {"class": "res-block", id: "res-"+i});
+    var btn = h.ctag("button", {onclick: "call('"+die.link+"', "+i+");"}, "blob");
+    var cb = h.ctag("td"); cb.append(btn);
+    line.append(cf); line.append(cr); line.append(cb); p.append(line);
+  }
+}
+</script>
+</head>
+<body onload="init();"><table id="the-table"></table></body>
+</html>

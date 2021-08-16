@@ -15,7 +15,7 @@ TODO : write url
 <style>
 body {
   color: white;
-  background: #334;
+  background: #112;
   font-family: sans-serif;
   text-align: center;
 }
@@ -42,16 +42,33 @@ button:hover {
   margin: 7px;
 }
 
-.roll-button {
+.roll-btns {
   background: #06f;
   color: white;
-  border-radius: 0 0 20px 20px;
   padding: 3px 0;
   cursor: pointer;
   border: solid 1px white;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.roll-button {
+  border-radius: 0 0 0 20px;
   font-variant-caps: small-caps;
+  width: 70%;
 }
 .roll-button:hover {
+  background: white;
+  color: #06f;
+}
+
+.roll-close {
+  border-radius: 0 0 20px 0;
+  font-weight: bold;
+  border-left: none;
+  width: 30%;
+}
+.roll-close:hover {
   background: white;
   color: #06f;
 }
@@ -72,6 +89,23 @@ button:hover {
 
 .roll-result {
   padding: 4px;
+}
+
+.veil-block {
+  display: none;
+  border: solid 1px white;
+  background: #112;
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 40px;
+  padding: 10px;
+  width: fit-content;
+}
+
+.veil-block button {
+  padding: 4px;
+  font-variant: small-caps;
+  font-size: 1.1em;
 }
 
 #pan-rolls {
@@ -109,7 +143,7 @@ button:hover {
 }
 
 #veil {
-  background: #0009;
+  background: #000c;
   display: none;
   color: white;
   position: absolute;
@@ -118,13 +152,13 @@ button:hover {
   right: 0;
   left: 0;
   text-align: center;
-  padding-top: 50px;
 }
 </style>
 <script type="text/javascript">
 var h = {
   id: function(id) { return document.getElementById(id); },
-  tag: function(tag, attrs, innerText) {
+  cls: function(cls) { return document.getElementsByClassName(cls); },
+  ctag: function(tag, attrs, innerText) {
     var o = document.createElement(tag);
     for (attr in attrs) { o.setAttribute(attr, attrs[attr]); }
     if (innerText != null) { o.innerText = innerText; }
@@ -176,6 +210,7 @@ function Rolls() {
   //this.pan = h.id("pan-rolls");
   this.addbtn = h.id("roll-add");
   //
+  //
   var self = this;
   //
   //
@@ -184,23 +219,34 @@ function Rolls() {
     // TODO : move through the veil
     //
     //
-    self.buildRoll();
+    app.veil.showSelected("addroll");
+    app.veil.on();
+    //
+    //self.buildRoll();
     //
   }
   //
   this.buildRoll = function() {
-    var blk = h.tag("div", {"class": "roll-block"});
-    var lbl = h.tag("div", {"class": "roll-label"}, "text label");
-    var frla = h.tag("div", {"class": "roll-formula"}, "(dice formula)");
-    var res = h.tag("div", {"class": "roll-result"});
-    var btn = h.tag("div", {"class": "roll-button"}, "Roll!");
+    //
+    var label = "plop";
+    //
+    var blk = h.ctag("div", {"class": "roll-block"});
+    var lbl = h.ctag("div", {"class": "roll-label"}, label);
+    var frla = h.ctag("div", {"class": "roll-formula"}, "(dice formula)");
+    var res = h.ctag("div", {"class": "roll-result"});
+    var btn = h.ctag("div", {"class": "roll-btns roll-button"}, "Roll!");
+    var cx = h.ctag("div", {"class": "roll-btns roll-close"}, "X");
     //
     blk.append(lbl);
     blk.append(frla);
     blk.append(res);
     blk.append(btn);
+    blk.append(cx);
     //
     self.addbtn.before(blk);
+    //
+    //
+    app.veil.off();
     //
   };
   //
@@ -217,8 +263,17 @@ function Veil() {
   this.div.style.display = "none";
   this.on = function() { status = true; this.div.style.display = "block"; };
   this.off = function() { status = false; this.div.style.display = "none"; };
-  //
-  //
+  this.showSelected = function(sel) {
+    //
+    var blks = h.cls("veil-block");
+    for (var i=0;i<blks.length;i++) { blks[i].style.display = ""; }
+    //
+    h.id("veil-"+sel+"-block").style.display = "block";
+    //
+    //
+    console.log("show selected");
+    //
+  };
 };
 
 app.start = function() {
@@ -244,7 +299,15 @@ app.start = function() {
     (hide conf zone)
 </div>
 <div id="veil">
-bouh
+  <div style="position:absolute;width:100%;height:100%;" onclick="app.veil.off();">&nbsp;</div>
+  <div class="veil-block" id="veil-addroll-block">
+    <h2>Add a new roll</h2>
+    <p><label for="veil-addroll-labinp">Label of the roll:</label></p>
+    <p><input id="veil-addroll-labinp" /></p>
+    <p>Roll type:</p>
+    <p>(not available)</p>
+    <p><button id="veil-addroll-create" onclick="app.rolls.buildRoll();">Create!</button></p>
+  </div>
 </div>
 </body>
 </html>

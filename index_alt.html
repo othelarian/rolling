@@ -11,10 +11,12 @@
 </style>
 <script type="text/javascript">
 var dice = [
-  {name: "d4", link: "d4"},
-  {name: "d6", link: "d6"},
-  {name: "d8", link: "d8"},
-  {name: "ULTIMATE", link: "d12"}
+  {name: "d4", link: "d4", mod: true, nb: true},
+  {name: "d6", link: "d6", mod: true, nb: true},
+  {name: "d8", link: "d8", mod: true, nb: true},
+  {name: "d10", link: "d10", mod: true, nb: true},
+  {name: "d12", link: "d12", mod: false, nb: false},
+  {name: "d20", link: "d20", mod: true, nb: true}
 ];
 function call(e, id) {
   var r = "";
@@ -22,7 +24,9 @@ function call(e, id) {
     case "d4": r = h.rand(4); break;
     case "d6": r = h.rand(6); break;
     case "d8": r = h.rand(8); break;
+    case "d10": r = h.rand(10); break;
     case "d12": r = h.rand(12); break;
+    case "d20": r = h.rand(20); break;
   }
   var rs = h.id("res-"+id);
   rs.innerText = r;
@@ -47,9 +51,22 @@ function init() {
   for (i in dice) {
     var die = dice[i];
     var line = h.ctag("tr");
+    //
+    // TODO : add nb
+    //
+    var cn = h.ctag("td");
+    if (die.mod) {
+      var inp = h.ctag("input", {type: "number", value: 1});
+      cn.append(inp);
+    }
+    line.append(cn);
+    //
     var cf = h.ctag("td", {"class": "form-block"}, die.name);
+    //
+    // TODO : add mod
+    //
     var cr = h.ctag("td", {"class": "res-block", id: "res-"+i});
-    var btn = h.ctag("button", {onclick: "call('"+die.link+"', "+i+");"}, "blob");
+    var btn = h.ctag("button", {onclick: "call('"+die.link+"', "+i+");"}, "Roll");
     var cb = h.ctag("td"); cb.append(btn);
     line.append(cf); line.append(cr); line.append(cb); p.append(line);
   }

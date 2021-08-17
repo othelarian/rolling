@@ -9,6 +9,7 @@
 @keyframes newroll { from {background: #3f3;} to {background: none;} }
 .res-rolled {animation: newroll 2s;};
 </style>
+<script type="text/javascript" src="https://togetherjs.com/togetherjs-min.js"></script>
 <script type="text/javascript">
 var dice = [
   {name: "d4", link: "d4", mod: true, nb: true},
@@ -73,5 +74,8 @@ function init() {
 }
 </script>
 </head>
-<body onload="init();"><table id="the-table"></table></body>
+<body onload="init();">
+<button onclick="TogetherJS(this); return false;">Start community!</button>
+<table id="the-table"></table>
+</body>
 </html>

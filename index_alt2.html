@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>PPR rolls</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style>
+      body { text-align: center; }
+      #bonus { width: 50px; }
+    </style>
+    <script type="text/javascript">
+      function byID(id) { return document.getElementById(id); }
+      function init() { console.log("blob"); }
+      function bonusChg(v) {
+        var bonux = byID("bonus");
+        bonux.value = parseInt(bonux.value) + v;
+      }
+      function rnd(f) { return Math.ceil(Math.random()*f); }
+      function roll() {
+        //
+        var rolltype = byID("rolltype").value;
+        //
+        console.log(rolltype);
+        //
+        var ra = 0;
+        var v1 = 0;
+        var v2 = 0;
+        switch(rolltype) {
+          case "classic": ra = rnd(6); break;
+          case "adv": v1 = rnd(6); v2 = rnd(6); ra = (v1 > v2)? v1 : v2; break;
+          case "dis": v1 = rnd(6); v2 = rnd(6); ra = (v1 < v2)? v1 : v2; break;
+        }
+        //
+        console.log(ra);
+        //
+        console.log("roll");
+        //
+      }
+    </script>
+  </head>
+  <body onload="init();">
+    <p>PPR rolls</p>
+    <p>
+      <select id="rolltype">
+        <option value="adv">Advantage</option>
+        <option value="classic" selected>Classic</option>
+        <option value="dis">Disadvantage</option>
+      </select>
+    </p>
+    <p>
+      <label for="bonus">Bonus:</label>
+      &nbsp;
+      <button onclick="bonusChg(-1);">-</button>
+      <input type="number" value="0" id="bonus" />
+      <button onclick="bonusChg(1);">+</button>
+    </p>
+    <p><button onclick="roll();">Roll!</button></p>
+    <p id="result">??</p>
+    <table>
+      <tr>
+        <td>d4</td>
+        <td>d6</td>
+        <td>d8</td>
+        <td>d12</td>
+      </tr>
+      <tr>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>
+          <button>Roll</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          ??
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

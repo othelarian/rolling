@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Storey</title>
+    <meta charset="utf-8">
+    <style>
+
+/* ************************ BASE ************************* */
+
+body {
+  font-size: 14px;
+  background: #221;
+  color: #f97;
+}
+
+button {
+  background: #221;
+  color: #17d;
+  border: solid 1px #17d;
+  border-radius: 7px;
+}
+button:hover {
+  background: #efe7e7;
+}
+button:active {
+  border: solid 1px #efe7e7;
+  background: #221;
+  color: #efe7e7;
+}
+
+/* ************************ ACTION BAR ******************* */
+
+#actionBar {
+  margin: auto;
+  width: 500px;
+  padding: 7px;
+}
+
+/* ************************ INTRO ************************ */
+
+#intro {
+  list-style-type: none;
+  margin: auto;
+  text-align: center;
+}
+
+#intro button {
+  font-size: 19px;
+  font-weight: bold;
+  margin: 10px auto;
+}
+
+/* ************************ VEIL ************************* */
+
+#veil {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #221a;
+}
+
+.veil_block {
+  margin: auto;
+  margin-top: 20px;
+  width: fit-content;
+  background: #221;
+  border: solid 2px #efe7e7;
+  border-radius: 15px;
+  text-align: center;
+  padding: 15px;
+  padding-top: 0px;
+}
+
+.veil_block h2 {
+  color: #efe7e7;
+  text-decoration: underline;
+}
+
+    </style>
+    <script type="text/javascript">
+
+// ####################### HELPER (H) {#########################
+
+var h = {
+  id: function(id) { return document.getElementById(id); },
+  cls: function(cls) { return document.getElementsByClassName(cls); },
+  ctag : function(tag, attrs, innerText) {
+    var o = document.createElement(tags);
+    for (attr in attrs) { o.setAttribute(attr, attrs[attr]); }
+    if (innerText != null) { o.innerText = innerText; }
+    return o;
+  },
+  display: function (elt, val) { elt.style.display = val; },
+  hide: function(elt) { h.display(elt, "none"); },
+  show: function(elt) { h.display(elt, "block"); }
+};
+
+// ####################### ACTION BAR ##########################
+
+function ActionBar() {
+  this.root = h.id("actionBar");
+  this.show = function() { h.show(this.root); };
+  //
+}
+var actionBar = null;
+
+// ####################### INTRO ###############################
+
+function Intro() {
+  this.root = h.id("intro");
+  this.back = function() { h.show(this.root); };
+  this.checkLoadWorld = function() {
+    //
+    console.log("DEBUG check load world");
+    //
+    //
+  };
+  this.close = function() { h.hide(this.root); };
+  this.load = function() { veil.open("loadWorld"); };
+  this.loadWorldInput = h.id("loadWorldInput");
+  this.new = function() {
+    world.new();
+    this.close();
+    //
+    action_bar.show();
+    //
+    screen.open();
+    //
+    veil.open("notAvailable"); // TODO
+  };
+}
+var intro = null;
+
+// ####################### SCREEN ##############################
+
+function Screen() {
+  this.root = h.id("screen");
+  this.open = function() {
+    //
+    //h.show(this.root);
+    //
+  };
+}
+var screen = null;
+
+// ####################### VEIL ################################
+
+function Veil() {
+  this.state = null;
+  this.root = h.id("veil");
+  this.close = function() { h.hide(this.root); }
+}
+Veil.prototype.open = function(state) {
+  if (this.state != null) {
+    h.hide(h.id(this.state));
+  }
+  switch(state) {
+    case "loadWorld": break;
+    case "notAvailable": break;
+  }
+  this.state = state;
+  h.show(h.id(state));
+  h.show(this.root);
+};
+var veil = null;
+
+// ####################### WORLD ###############################
+
+function World() {
+  //
+  this.new = function() {
+    //
+    console.log("DEBUG world init called...");
+    //
+  };
+  //
+  //
+}
+var world = null;
+
+// ####################### INIT & CO ###########################
+
+function init() {
+  actionBar = new ActionBar();
+  intro = new Intro();
+  screen = new Screen();
+  veil = new Veil();
+  world = new World();
+}
+    </script>
+  </head>
+  <body onload="init();">
+    <ul id="intro">
+      <li><button onclick="intro.new();">New</button></li>
+      <li><button onclick="intro.load();">Load</button></li>
+    </ul>
+    <div id="actionBar" style="display:none">
+      <span>
+        <label>World's name:</label>
+        <input />
+      </span>
+      <button onclick="veil.open('notAvailable');">Veil</button>
+    </div>
+    <div id="charrZone" style="display:none">(charr zone)</div>
+    <div id="storyZone" style="display:none">(story zone)</div>
+    <div id="cardsZone" style="display:none">(cards zone)</div>
+    <div id="veil" style="display:none">
+      <div id="notAvailable" class="veil_block" style="display:none">
+        <h2>Feature Not Available!</h2>
+        <p>This feature isn't available, yet</p>
+        <button onclick="veil.close();">Ok</button>
+      </div>
+      <div id="loadWorld" class="veil_block" style="display:none">
+        <h2>Load a world from a file</h2>
+        <p>
+          <input type="file" id="loadWorldInput" accept=".json" />
+        </p>
+        <p>
+          <button onclick="intro.checkLoadWorld();">Go!</button>
+          <button onclick="veil.close();">Cancel</button>
+        </p>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+
+/* #################### TODO #####################
+
+- world init
+- intro load
+- screen, 3 columns
+
+*/
+  </script>
+</html>
